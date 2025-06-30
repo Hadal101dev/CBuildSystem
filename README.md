@@ -2,11 +2,17 @@
 a simple build system for C written in C. Currently only implemented for Windows, but shouldn't be too tough to implement Linux and Mac. Meant for small to medium sized C-based projects without the mental overhead of having to deal with makefiles or batch scripts.
 
 Step 1: Clone repo to directory.
+
 Step 2: Set path in environment variable (so you can use it from command line)
+
 Step 3: From terminal, navigate to project directory and type "cbs init"
+
 Step 4: read and adjust the build.c template file. There's an "examples" section at the top. I'll post below as well for convenience.
+
 Step 5: type "cbs compile" to build the build.c file into build.exe
+
 Step 6: run any custom commands you've created from the terminal
+
 
 This build system lets you define custom commands to call from the terminal. For example you can have a "build" command that will build your project, a "run" command to run the executable, a "recompile-dlls" to only rebuild dll files, etc. You define the custom commands and code them yourself using C in the "build.c" file.
 
