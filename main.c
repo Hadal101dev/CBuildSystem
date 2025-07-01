@@ -50,6 +50,7 @@ void Get_Current_Directory(char* path_buffer,size_t buffer_length){
     DWORD bytes = GetCurrentDirectoryA(buffer_length, path_buffer);
     path_buffer[bytes+1] = '\0';
 }
+
 void Get_Current_Exe_Path(char* path_buffer,size_t buffer_size){
     int length = (int)GetModuleFileNameA(NULL, path_buffer, buffer_size);
     for (int i = length-1; i >= 0; i--) {
@@ -59,6 +60,7 @@ void Get_Current_Exe_Path(char* path_buffer,size_t buffer_size){
         }
     }
 }
+
 void Copy_File(const char *from, const char *to){
     bool result = CopyFileA(from,to,true);
     if(result == false){
@@ -66,6 +68,7 @@ void Copy_File(const char *from, const char *to){
         from,to,(int)GetLastError());
     }
 }
+
 void Run_Cmd(char* cmd){
     STARTUPINFO si = { 0 };
     PROCESS_INFORMATION pi = { 0 };   
@@ -101,6 +104,7 @@ void Run_Cmd(char* cmd){
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
 }
+
 #elif defined(__linux__)
 #include<unistd.h>
 #define FILE_PATH_MAX 4096

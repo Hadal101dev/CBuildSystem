@@ -108,7 +108,7 @@ static bool string_starts_with(const char* string, const char* prefix){
     else return false;
 }
 
-static bool string_ends_with(const char* string, const char* suffix){
+static bool string_ends_with_string(const char* string, const char* suffix){
     size_t suffix_length = strlen(suffix);
     size_t string_length = strlen(string);
     if(suffix_length > string_length) return false;
@@ -116,6 +116,10 @@ static bool string_ends_with(const char* string, const char* suffix){
     size_t index = string_length - suffix_length;
     if(memcmp(&string[index],suffix,suffix_length) == 0) return true;
     else return false;
+}
+static bool string_ends_with_char(const char* string, const char suffix){
+    size_t string_length = strlen(string);
+    return string[string_length - 1] == suffix;
 }
 
 static bool buffer_append_string(char* buffer,uint32_t buffer_capacity,const char* string){
@@ -248,7 +252,7 @@ static void add_files_recursive_from_source_directory(char* search_path, char* c
                 bool should_exclude = false;
                 for (int i = 0; i<files_to_exclude.length; i++) {
                     const char* excluded_filename = files_to_exclude.items[i];
-                    if(string_ends_with(find_data.cFileName, excluded_filename)){
+                    if(string_ends_with_string(find_data.cFileName, excluded_filename)){
                         should_exclude = true;
                         break;
                     }
@@ -444,7 +448,18 @@ void create_compile_commands_json(const CbsModule *module_array,const int array_
     bool first_block = true;
     for(int i = 0; i < array_length; i++){
         CbsModule module = module_array[i];
-        add_files_to_compile_commands_recursive(file, path_buffer, module, &first_block);
+        if(module.source_file_directory != NULL){
+            size_t chars_to_remove = strlen(module.source_file_directory);
+            buffer_append_string(path_buffer, FILE_PATH_MAX, module.source_file_directory);
+            if(string_ends_with_char(module.source_file_directory,FILE_SEPARATOR)==false){
+                buffer_append_char(path_buffer, FILE_PATH_MAX, FILE_SEPARATOR);
+                chars_to_remove++;
+            }
+            add_files_to_compile_commands_recursive(file, path_buffer, module, &first_block);
+            buffer_remove_characters_from_end(path_buffer,chars_to_remove);
+        }else{
+            add_files_to_compile_commands_recursive(file, path_buffer, module, &first_block);
+        }
     }
     WriteFile(file,"\n]\n",3,NULL,NULL);
 
