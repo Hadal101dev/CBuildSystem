@@ -21,8 +21,6 @@ There is some overhead since it's effectively an exe calling into another exe wh
 
 There is no incremental building built-in. you can define custom commands for each module or groups of modules, but it wont automatically check for you unless you code it yourself.
 
-Also you can bypass the cbs command if you want to just type ./build.exe <args>. Set it up to use cbs cuz i'm just that lazy.
-
 Current System Commands...
 "init" - creates build.c and build.h files at project directory. Files are copied from cbs.exe directory.
 "compile" - compiles the build.c into a build.h with the specified compiler. e.g. "cbs compile <compiler>"
