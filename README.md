@@ -28,6 +28,8 @@ Current System Commands...
 "compile" - compiles the build.c into a build.h with the specified compiler. e.g. "cbs compile <compiler>"
 "help" - just links you here lol.
 
+NOTE: the build.h file comes with a utility method for building a compiler_commands.json if you need it. It's included in the build.c template file under the "cc" command.
+
 
 ======== CUSTOM COMMANDS ============
 
