@@ -7,11 +7,11 @@ Step 2: Set path in environment variable (so you can use it from command line)
 
 Step 3: From terminal, navigate to project directory and type "cbs init"
 
-Step 4: read and adjust the build.c template file. There's an "examples" section at the top. But theres also an explanation below
+Step 4:adjust the build.c template file to match your project. (read below to see how it works)
 
 Step 5: type "cbs compile" to build the build.c file into build.exe
 
-Step 6: run any custom commands you've created from the terminal using "cbs <command> <args>"
+Step 6: run any custom commands you've created from the terminal using "cbs <command> <optional_args>"
 
 ======== HOW IT WORKS ============
 
@@ -55,7 +55,7 @@ const CbsCommand command_do_thing = {
 
 By default the generated build.c file will define and loop thru an array of commands and check to see whether argv[1] matches the command name. If it does it will call the bound function. 
 
-================ BUILD MODULES ==============
+================ BUILD MODULES / PROJECT SETUP ==============
 
 This build system uses the concept of "modules". A module is defined loosely as a group of source files that are combined to produce an output file and any additional flags or compiler arguments associated with that group and output.
 
