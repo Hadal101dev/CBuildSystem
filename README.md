@@ -25,7 +25,7 @@ Current System Commands...
 
 "init" - creates build.c and build.h files at project directory. Files are copied from cbs.exe directory.
 
-"compile" - compiles the build.c into a build.h with the specified compiler. e.g. "cbs compile <compiler>"
+"compile" - compiles the build.c into a build.h with the specified compiler. e.g. "cbs compile [compiler]"
 
 "help" - just links you here lol.
 
