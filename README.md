@@ -105,43 +105,37 @@ const CbsModule example_module_1 = (CbsModule){
 this automatically calculates the length for you.
 
 When filling out the CbsModule struct certain fields are manditory and others are optional. 
-Manditory with be prefixed with [M] and optional will be prefixed with [O].
+Manditory will have [M] and optional will be have [O].
 
-[M] name
+```c
+const CbsModule example_module_2 = (CbsModule){
+    .name = "main",                         //[M] name of module, used as id
+    .compiler = "clang",                    //[M] compiler exe name (clang, gcc, cl, etc)
+    .source_file_directory = NULL,          //[M] relative path. searches recursively in all subfolders
+    .output_file_name_with_extension = NULL,//[M]
 
-[M] compiler - the name of the exe of the compiler you're using (clang, gcc, cl, etc). Must be accessible thru the command line.
+    .shared_compiler_flags = NULL,          //[O]
+    .unique_compiler_flags = NULL,          //[O]
 
-[M] source_file_directory - must use relative path. searches recursively in folder and subfolders.
+    .shared_include_paths = NULL,           //[O]
+    .unique_include_paths = NULL,           //[O]
 
-[M] output_file_name_with_extension
+    .shared_library_paths = NULL,           //[O]
+    .unique_library_paths = NULL,           //[O]
 
-[O] shared_compiler_flags 
+    .shared_linker_flags = NULL,            //[O]
+    .unique_linker_flags = NULL,            //[O]
 
-[O] unique_compiler_flags 
-
-[O] shared_include_paths 
-
-[O] unique_include_paths 
-
-[O] shared_library_paths 
-
-[O] unique_library_paths
-
-[O] shared_linker_flags 
-
-[O] unique_linker_flags 
-
-[O] additional_source_file_paths - must be absolute paths, additions files to include that aren't in src folder or subfolders
-
-[O] source_files_to_exclude  - exclude certain c files in src folder and sub folders
-
-[O] output_directory - must use relative path. If NULL will put output file in project root directory.
+    .additional_source_file_paths = NULL,   //[O] for additional files that arent in src folder. absolute paths.
+    .source_files_to_exclude = NULL,        //[O] to exclude c files in source folder, just file names with extension
+    .output_directory = NULL,               //[O] Use relative path. if null, its the root directory.
+```
 
 compiler flags,include paths, library paths and linker flags all have 2 separate array, one for shared values across modules and one for unique values per module. This is mostly for bigger projects with multiple modules so you don't have to repeat stuff often.
 
 :IMPORTANT: include paths and library paths should NOT include the -I and -L prefixes.
-compiler flags and linker flags can include the '-' and '-l" prefixes or leave them out. Doesnt matter.
+compiler flags and linker flags can include the '-' and '-l' prefixes or leave them out. Doesnt matter.
 
-:IMPORTANT: unique flags for different output types like '-shared' for .dll or .so, must be explicitly included. This system wont detect and add them automaticall.
+:IMPORTANT: unique flags for different output types like '-shared' for .dll or .so, must be explicitly included. This system wont detect and add them automatically.
 
 
