@@ -1,5 +1,5 @@
 # CBuildSystem
-a simple build system for C written in C. Currently only implemented for Windows, but shouldn't be too tough to implement Linux and Mac. Meant for small to medium sized C-based projects without the mental overhead of having to deal with makefiles or batch scripts.
+a simple build system for C projects, written in C. Currently only implemented for Windows, but shouldn't be too tough to implement Linux and Mac. Meant for small to medium sized C-based projects without the mental overhead of having to deal with makefiles or batch scripts.
 
 Step 1: Clone repo to directory.
 
@@ -20,6 +20,8 @@ when you run a command from the terminal "cbs <command> <additional args>" it wi
 There is some overhead since it's effectively an exe calling into another exe which, when building, calls into the compiler exe thru the command line.
 
 There is no incremental building built-in. you can define custom commands for each module or groups of modules, but it wont automatically check for you unless you code it yourself.
+
+Also you can bypass the cbs command if you want to just type ./build.exe <args>. Set it up to use cbs cuz i'm just that lazy.
 
 Current System Commands...
 "init" - creates build.c and build.h files at project directory. Files are copied from cbs.exe directory.
