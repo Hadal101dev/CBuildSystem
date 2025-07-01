@@ -108,24 +108,33 @@ When filling out the CbsModule struct certain fields are manditory and others ar
 Manditory with be prefixed with [M] and optional will be prefixed with [O].
 
 [M] name
+
 [M] compiler - the name of the exe of the compiler you're using (clang, gcc, cl, etc). Must be accessible thru the command line.
+
 [M] source_file_directory - must use relative path. searches recursively in folder and subfolders.
+
 [M] output_file_name_with_extension
 
 [O] shared_compiler_flags 
+
 [O] unique_compiler_flags 
 
 [O] shared_include_paths 
+
 [O] unique_include_paths 
 
 [O] shared_library_paths 
+
 [O] unique_library_paths
 
 [O] shared_linker_flags 
+
 [O] unique_linker_flags 
 
 [O] additional_source_file_paths - must be absolute paths, additions files to include that aren't in src folder or subfolders
+
 [O] source_files_to_exclude  - exclude certain c files in src folder and sub folders
+
 [O] output_directory - must use relative path. If NULL will put output file in project root directory.
 
 compiler flags,include paths, library paths and linker flags all have 2 separate array, one for shared values across modules and one for unique values per module. This is mostly for bigger projects with multiple modules so you don't have to repeat stuff often.
