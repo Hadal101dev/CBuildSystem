@@ -7,19 +7,29 @@ Step 2: Set path in environment variable (so you can use it from command line)
 
 Step 3: From terminal, navigate to project directory and type "cbs init"
 
-Step 4: read and adjust the build.c template file. There's an "examples" section at the top. I'll post below as well for convenience.
+Step 4: read and adjust the build.c template file. There's an "examples" section at the top. But theres also an explanation below
 
 Step 5: type "cbs compile" to build the build.c file into build.exe
 
-Step 6: run any custom commands you've created from the terminal
+Step 6: run any custom commands you've created from the terminal using "cbs <command> <args>"
+
+======== HOW IT WORKS ============
+
+when you run a command from the terminal "cbs <command> <additional args>" it will first check if it's a system command like "init" or "compile". If it isn't, it will check for the "build.exe" in your project directory. If it exists, then it will run build.exe and pass in the same command and args you typed, allowing them to be handled by the the code in your build.c file. This lets you define custom commands and map them to C functions. (remember that argv[0] will be "cbs", the command itself will be argv[1].
+
+There is some overhead since it's effectively an exe calling into another exe which, when building, calls into the compiler exe thru the command line.
+
+There is no incremental building built-in. you can define custom commands for each module or groups of modules, but it wont automatically check for you unless you code it yourself.
+
+Current System Commands...
+"init" - creates build.c and build.h files at project directory. Files are copied from cbs.exe directory.
+"compile" - compiles the build.c into a build.h with the specified compiler. e.g. "cbs compile <compiler>"
+"help" - just links you here lol.
 
 
-======== CUSTOME COMMANDS ============
-This build system lets you define custom commands to call from the terminal. For example you can have a "build" command that will build your project, a "run" command to run the executable, a "recompile-dlls" to only rebuild dll files, etc. You define the custom commands and code them yourself using C in the "build.c" file.
+======== CUSTOM COMMANDS ============
 
-The way it works is that when you type in "cbs <command>", if it's not a hardcoded command like "init" or "compile" it will check to see if a build.exe file exists at the project directory, if it does it will pass the command to the build.exe, which lets you define how to process it in your build.c file. 
-
-You can define CbsCommand structs
+This system uses the CbsCommand struct
 ```c
 typedef struct CbsCommand{
     const char *name , *description;
@@ -27,7 +37,7 @@ typedef struct CbsCommand{
 }CbsCommand;
 ```
 
-and bind them to functions
+You can define your own commands and  bind them to functions as long as they follow the signature of returning void and taking in and const int and const char**. 
 
 ```c
 void do_thing(int argc, char** argv){
@@ -41,7 +51,7 @@ const CbsCommand command_do_thing = {
 }
 ```
 
-By default the generated build.c file will loop thru an array of defined commands and check to see whether argv[1] matches the command name. If it does it will call the bound function. 
+By default the generated build.c file will define and loop thru an array of commands and check to see whether argv[1] matches the command name. If it does it will call the bound function. 
 
 ================ BUILD MODULES ==============
 
@@ -93,4 +103,36 @@ const CbsModule example_module_1 = (CbsModule){
 };
 ```
 this automatically calculates the length for you.
+
+When filling out the CbsModule struct certain fields are manditory and others are optional. 
+Manditory with be prefixed with [M] and optional will be prefixed with [O].
+
+[M] name
+[M] compiler - the name of the exe of the compiler you're using (clang, gcc, cl, etc). Must be accessible thru the command line.
+[M] source_file_directory - must use relative path. searches recursively in folder and subfolders.
+[M] output_file_name_with_extension
+
+[O] shared_compiler_flags 
+[O] unique_compiler_flags 
+
+[O] shared_include_paths 
+[O] unique_include_paths 
+
+[O] shared_library_paths 
+[O] unique_library_paths
+
+[O] shared_linker_flags 
+[O] unique_linker_flags 
+
+[O] additional_source_file_paths - must be absolute paths, additions files to include that aren't in src folder or subfolders
+[O] source_files_to_exclude  - exclude certain c files in src folder and sub folders
+[O] output_directory - must use relative path. If NULL will put output file in project root directory.
+
+compiler flags,include paths, library paths and linker flags all have 2 separate array, one for shared values across modules and one for unique values per module. This is mostly for bigger projects with multiple modules so you don't have to repeat stuff often.
+
+:IMPORTANT: include paths and library paths should NOT include the -I and -L prefixes.
+compiler flags and linker flags can include the '-' and '-l" prefixes or leave them out. Doesnt matter.
+
+:IMPORTANT: unique flags for different output types like '-shared' for .dll or .so, must be explicitly included. This system wont detect and add them automaticall.
+
 
